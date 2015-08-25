@@ -7,7 +7,7 @@ import java.awt.Graphics2D;
 
 import javax.swing.JPanel;
 
-public class GamePanel extends JPanel{
+public class GamePanel extends JPanel {
 
 	final static int FPS = 30;
 
@@ -25,7 +25,7 @@ public class GamePanel extends JPanel{
 	final static int BOX_HEIGHT = 30;
 	final static int BOX_ROWS = 10;
 
-	boolean gameRunning = true;
+	boolean gameRunning = false;
 
 	int tileX;
 	int tileVel;
@@ -37,46 +37,46 @@ public class GamePanel extends JPanel{
 
 	boolean boxes[][];
 
-	public GamePanel(){
+	public GamePanel() {
 		setSize(new Dimension(WIDTH, HEIGHT));
 		setPreferredSize(getSize());
 		setBackground(Color.WHITE);
 
 		GameInit();
-		runGameLoop();
 	}
 
-	private void runGameLoop(){
-		Thread loop = new Thread(){
-			public void run(){
+	protected void runGameLoop() {
+		Thread loop = new Thread() {
+			public void run() {
+				gameRunning = true;
 				gameLoop();
 			}
 		};
 		loop.start();
 	}
 
-	private void gameLoop(){
+	private void gameLoop() {
 		int i = 0;
 		long lastLoopTime = System.nanoTime();
 		final long OPT_TIME = 1000000000 / FPS;
-		while (gameRunning){
+		while (gameRunning) {
 			long now = System.nanoTime();
 			lastLoopTime = now;
 			// long updateLength = now - lastLoopTime;
 			// double delta = updateLength / ((double) OPT_TIME);
-
 			GameUpdate();
 			i++;
 			System.out.println(i);
-			try{
+			try {
 				Thread.sleep((lastLoopTime - System.nanoTime() + OPT_TIME) / 1000000);
-			} catch (InterruptedException e){}
+			} catch (InterruptedException e) {
+			}
 		}
 
 		GameOver();
 	}
 
-	private void GameInit(){
+	private void GameInit() {
 		tileX = WIDTH / 2 - TILE_WIDTH / 2;
 		tileVel = 0;
 
@@ -91,7 +91,7 @@ public class GamePanel extends JPanel{
 				boxes[i][j] = true;
 	}
 
-	private void GameUpdate(){
+	private void GameUpdate() {
 		tileX += TILE_SPEED * tileVel;
 
 		if (tileX <= TILE_HEIGHT || tileX + TILE_WIDTH >= WIDTH - TILE_HEIGHT)
@@ -105,24 +105,26 @@ public class GamePanel extends JPanel{
 		if (ballY <= TILE_HEIGHT
 				|| (ballY + BALL_WIDTH >= HEIGHT - TILE_HEIGHT && (ballX
 						+ BALL_WIDTH / 2 >= tileX && ballX + BALL_WIDTH / 2 <= tileX
-						+ TILE_WIDTH))) ballYVel *= -1;
-		
+						+ TILE_WIDTH)))
+			ballYVel *= -1;
+
 		for (int i = 0; i < 10; i++)
-			for (int j = 0; j < BOX_ROWS; j++){
-				
+			for (int j = 0; j < BOX_ROWS; j++) {
+
 			}
 
-		if (ballY + BALL_WIDTH >= HEIGHT) gameRunning = false;
+		if (ballY + BALL_WIDTH >= HEIGHT)
+			gameRunning = false;
 
 		repaint();
 	}
 
-	private void GameOver(){
+	private void GameOver() {
 		System.out.println("Game Over");
 	}
 
 	@Override
-	public void paint(Graphics g){
+	public void paint(Graphics g) {
 		super.paint(g);
 		Graphics2D g2D = (Graphics2D) g;
 		g2D.setColor(Color.BLACK);

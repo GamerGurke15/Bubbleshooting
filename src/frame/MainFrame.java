@@ -7,15 +7,15 @@ import java.awt.event.KeyListener;
 
 import javax.swing.JFrame;
 
-public class MainFrame extends JFrame{
+public class MainFrame extends JFrame {
 
 	static MainFrame fr;
 
-	public static void main(String[] args){
-		EventQueue.invokeLater(new Runnable(){
-			public void run(){
+	public static void main(String[] args) {
+		EventQueue.invokeLater(new Runnable() {
+			public void run() {
 				fr = new MainFrame("Bubbleshooting");
-				fr.setSize(new Dimension(1296, 759));
+				fr.setSize(new Dimension(1296, 770));
 				fr.setPreferredSize(fr.getSize());
 				fr.setDefaultCloseOperation(EXIT_ON_CLOSE);
 				fr.setVisible(true);
@@ -25,22 +25,30 @@ public class MainFrame extends JFrame{
 
 	GamePanel gp;
 
-	public MainFrame(String title){
+	public MainFrame(String title) {
 		super(title);
 		gp = new GamePanel();
 		add(gp);
 		gp.setVisible(true);
-		
-		addKeyListener(new KeyListener(){
-			public void keyTyped(KeyEvent e){}
-			
-			public void keyReleased(KeyEvent e){
+
+		addKeyListener(new KeyListener() {
+			public void keyTyped(KeyEvent e) {
 			}
-			
-			public void keyPressed(KeyEvent e){
-				if (e.getKeyCode() == KeyEvent.VK_LEFT){
+
+			public void keyReleased(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_LEFT
+						|| e.getKeyCode() == KeyEvent.VK_RIGHT)
+					gp.tileVel = 0;
+			}
+
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+					if (!gp.gameRunning)
+						gp.runGameLoop();
 					gp.tileVel = -1;
-				}else if (e.getKeyCode() == KeyEvent.VK_RIGHT){
+				} else if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+					if (!gp.gameRunning)
+						gp.runGameLoop();
 					gp.tileVel = 1;
 				}
 			}
